@@ -4,7 +4,6 @@ import gui.MainPanel;
 import gui.Window;
 import gui.wizard.WizardDialog;
 import core.Globals;
-import core.utils.Serial;
 
 public class App {
 	public static void main(String[] args) {
@@ -14,11 +13,10 @@ public class App {
 		// e.printStackTrace();
 		// }
 
-		System.out.println("JSSC: " + Serial.getAvailableSerialPorts().size());
-
 		// CONFIGURACIÓN INICIAL
-		final WizardDialog p = new WizardDialog("Asistente configuración inicial", null, Globals.InitialConfigWizard);
-		p.pack();
+		final WizardDialog p = new WizardDialog(
+				"Gestor de configuración de Plataforma V2V", null,
+				Globals.InitialConfigWizard);
 		p.setVisible(true);
 
 		Window.getInstance().setContainer(new MainPanel());

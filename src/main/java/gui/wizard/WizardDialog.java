@@ -1,11 +1,10 @@
 package gui.wizard;
 
 import gui.Window;
-import gui.components.RoundedPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -26,6 +25,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import core.Globals;
+
 public class WizardDialog extends JDialog implements ActionListener {
 
 	private static final long	serialVersionUID	= -7791300364393050058L;
@@ -33,7 +34,7 @@ public class WizardDialog extends JDialog implements ActionListener {
 	private int					index;
 	private WizardPanel			currentPanel;
 
-	private RoundedPanel		panel;
+	private JPanel				panel;
 	private JButton				btnBack;
 	private JButton				btnNext;
 	private JButton				btnFinish;
@@ -51,9 +52,13 @@ public class WizardDialog extends JDialog implements ActionListener {
 		if (parent == null) {
 			setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		}
-
-		setMinimumSize(new Dimension(1024, 768));
+		setMinimumSize(Globals.WindowMinimumSize);
+		setMaximumSize(Globals.WindowMinimumSize);
+		setPreferredSize(Globals.WindowMinimumSize);
+		setResizable(false);
 		setLocationRelativeTo(null);
+		setIconImage(new ImageIcon(
+				Window.class.getResource("/icons/app-icon.png")).getImage());
 		getContentPane().setLayout(new BorderLayout());
 
 		JPanel contentPanel = new JPanel();
@@ -80,7 +85,7 @@ public class WizardDialog extends JDialog implements ActionListener {
 		gbc_lblStep.gridy = 0;
 		contentPanel.add(lblStep, gbc_lblStep);
 
-		panel = new RoundedPanel();
+		panel = new JPanel();
 		// panel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.insets = new Insets(0, 10, 0, 10);
@@ -98,12 +103,16 @@ public class WizardDialog extends JDialog implements ActionListener {
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
 		btnBack = new JButton("Volver");
+		btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnBack.setFocusPainted(false);
 		btnBack.setMargin(new Insets(5, 5, 5, 5));
 		btnBack.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		btnBack.addActionListener(this);
 		buttonPane.add(btnBack);
 
 		btnNext = new JButton("Siguiente");
+		btnNext.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnNext.setFocusPainted(false);
 		btnNext.setMargin(new Insets(5, 5, 5, 5));
 		btnNext.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		btnNext.addActionListener(this);
@@ -111,6 +120,8 @@ public class WizardDialog extends JDialog implements ActionListener {
 		getRootPane().setDefaultButton(btnNext);
 
 		btnFinish = new JButton("Terminar");
+		btnFinish.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnFinish.setFocusPainted(false);
 		btnFinish.setMargin(new Insets(5, 5, 5, 5));
 		btnFinish.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		btnFinish.addActionListener(this);
@@ -124,9 +135,13 @@ public class WizardDialog extends JDialog implements ActionListener {
 							.showOptionDialog(
 									WizardDialog.this,
 									"A continuación se procederá a cerrar la aplicación.\nTodos las configuraciones se perderán.\n¿Deseas continuar?",
-									"Salir", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(
-											WizardDialog.class.getResource("/icons/warning-icon.png")), new Object[] {
-											"Si", "No" }, "No");
+									"Salir",
+									JOptionPane.YES_NO_OPTION,
+									JOptionPane.QUESTION_MESSAGE,
+									new ImageIcon(
+											WizardDialog.class
+													.getResource("/icons/warning-icon.png")),
+									new Object[] { "Si", "No" }, "No");
 					if (selection == 0) {
 						currentPanel.stop();
 						System.exit(0);
@@ -179,18 +194,28 @@ public class WizardDialog extends JDialog implements ActionListener {
 			String errorMessage = currentPanel.validateData();
 			if (!errorMessage.equals("")) {
 				errorMessage = "Error los siguientes datos:" + errorMessage;
-				JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.WARNING_MESSAGE, new ImageIcon(
-						WizardDialog.class.getResource("/icons/warning-icon.png")));
+				JOptionPane.showMessageDialog(
+						this,
+						errorMessage,
+						"Error",
+						JOptionPane.WARNING_MESSAGE,
+						new ImageIcon(WizardDialog.class
+								.getResource("/icons/warning-icon.png")));
 			} else {
 				if (currentPanel.getNotice().equals("")) {
 					currentPanel.saveChanges();
 					index++;
 					setContainer(index);
 				} else {
-					int selection = JOptionPane.showOptionDialog(this, currentPanel.getNotice(), "Aviso",
-							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-							new ImageIcon(WizardDialog.class.getResource("/icons/warning-icon.png")), new Object[] {
-									"Si", "No" }, "Si");
+					int selection = JOptionPane.showOptionDialog(
+							this,
+							currentPanel.getNotice(),
+							"Aviso",
+							JOptionPane.YES_NO_OPTION,
+							JOptionPane.QUESTION_MESSAGE,
+							new ImageIcon(WizardDialog.class
+									.getResource("/icons/warning-icon.png")),
+							new Object[] { "Si", "No" }, "Si");
 					if (selection == 0) {
 						currentPanel.saveChanges();
 						currentPanel.stop();
@@ -200,10 +225,14 @@ public class WizardDialog extends JDialog implements ActionListener {
 				}
 			}
 		} else if (btnBack == e.getSource()) {
-			int selection = JOptionPane.showOptionDialog(this,
-					"Se perderán los datos modificados.\n¿Deseas continuar?", "Aviso", JOptionPane.YES_NO_OPTION,
+			int selection = JOptionPane.showOptionDialog(
+					this,
+					"Se perderán los datos modificados.\n¿Deseas continuar?",
+					"Aviso",
+					JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE,
-					new ImageIcon(WizardDialog.class.getResource("/icons/warning-icon.png")),
+					new ImageIcon(WizardDialog.class
+							.getResource("/icons/warning-icon.png")),
 					new Object[] { "Si", "No" }, "Si");
 			if (selection == 0) {
 				index--;
@@ -215,8 +244,13 @@ public class WizardDialog extends JDialog implements ActionListener {
 			String errorMessage = currentPanel.validateData();
 			if (!errorMessage.equals("")) {
 				errorMessage = "Error los siguientes datos: " + errorMessage;
-				JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.WARNING_MESSAGE, new ImageIcon(
-						WizardDialog.class.getResource("/icons/warning-icon.png")));
+				JOptionPane.showMessageDialog(
+						this,
+						errorMessage,
+						"Error",
+						JOptionPane.WARNING_MESSAGE,
+						new ImageIcon(WizardDialog.class
+								.getResource("/icons/warning-icon.png")));
 			} else {
 				currentPanel.stop();
 				this.dispose();

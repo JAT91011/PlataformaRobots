@@ -1,7 +1,6 @@
 package core.utils;
 
 import java.util.Vector;
-import java.util.regex.Pattern;
 
 import jssc.SerialPortList;
 
@@ -14,10 +13,9 @@ public class Serial {
 
 	public static Vector<String> getAvailableSerialPorts() {
 		Vector<String> availablePorts = new Vector<String>();
-		String[] portNames = SerialPortList.getPortNames("/dev/", Pattern.compile("tty."));
+		String[] portNames = SerialPortList.getPortNames();
 		for (String port : portNames) {
 			availablePorts.add(port);
-			System.out.println(port);
 		}
 		return availablePorts;
 	}

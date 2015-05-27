@@ -29,10 +29,12 @@ public class AddNewRobotPanel extends WizardPanel {
 		gridBagLayout.columnWidths = new int[] { 0, 0, 0 };
 		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0,
+				Double.MIN_VALUE };
 		setLayout(gridBagLayout);
 
-		JLabel lblAddRobot = new JLabel("Coloca el nuevo robot en el circuito en el sentido correcto.");
+		JLabel lblAddRobot = new JLabel(
+				"Coloca los nuevos robots en el circuito y pulsa el botón buscar");
 		lblAddRobot.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		GridBagConstraints gbc_lblAddRobot = new GridBagConstraints();
 		gbc_lblAddRobot.gridwidth = 2;
@@ -62,7 +64,8 @@ public class AddNewRobotPanel extends WizardPanel {
 		txtRobotName.setColumns(15);
 
 		lblCamposObligatorios = new JLabel("* Campos obligatorios");
-		lblCamposObligatorios.setFont(new Font("Lucida Grande", Font.ITALIC, 13));
+		lblCamposObligatorios
+				.setFont(new Font("Lucida Grande", Font.ITALIC, 13));
 		GridBagConstraints gbc_lblCamposObligatorios = new GridBagConstraints();
 		gbc_lblCamposObligatorios.anchor = GridBagConstraints.EAST;
 		gbc_lblCamposObligatorios.insets = new Insets(0, 0, 15, 15);

@@ -46,7 +46,8 @@ public class Globals {
 	public static String			RouteConfigWizard	= "RouteChooserPanel;RouteConfigPanel";
 
 	// CONFIGURATION
-	public static Dimension			WindowMinimumSize	= new Dimension(1024, 768);
+	public static Dimension			WindowMinimumSize	= new Dimension(1080,
+																720);
 
 	// COLORS
 	public static CvScalar			MIN_COLOR_PREVIEW	= cvScalar(0, 0, 0, 0);

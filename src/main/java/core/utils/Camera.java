@@ -5,13 +5,10 @@ import static org.bytedeco.javacpp.opencv_core.CV_64FC1;
 import static org.bytedeco.javacpp.opencv_core.CV_AA;
 import static org.bytedeco.javacpp.opencv_core.CV_WHOLE_SEQ;
 import static org.bytedeco.javacpp.opencv_core.cvCircle;
-import static org.bytedeco.javacpp.opencv_core.cvCloneImage;
 import static org.bytedeco.javacpp.opencv_core.cvCreateImage;
 import static org.bytedeco.javacpp.opencv_core.cvCreateMat;
-import static org.bytedeco.javacpp.opencv_core.cvCreateMemStorage;
 import static org.bytedeco.javacpp.opencv_core.cvDrawCircle;
 import static org.bytedeco.javacpp.opencv_core.cvDrawLine;
-import static org.bytedeco.javacpp.opencv_core.cvFlip;
 import static org.bytedeco.javacpp.opencv_core.cvGet2D;
 import static org.bytedeco.javacpp.opencv_core.cvGetSeqElem;
 import static org.bytedeco.javacpp.opencv_core.cvGetSize;
@@ -35,7 +32,6 @@ import static org.bytedeco.javacpp.opencv_imgproc.cvFindContours;
 import static org.bytedeco.javacpp.opencv_imgproc.cvHoughCircles;
 import static org.bytedeco.javacpp.opencv_imgproc.cvSmooth;
 import static org.bytedeco.javacpp.opencv_imgproc.cvWarpPerspective;
-import gui.components.ProgressDialog;
 import interfaces.CameraObserver;
 
 import java.awt.Color;
@@ -50,7 +46,6 @@ import org.bytedeco.javacpp.opencv_core.CvPoint;
 import org.bytedeco.javacpp.opencv_core.CvPoint3D32f;
 import org.bytedeco.javacpp.opencv_core.CvScalar;
 import org.bytedeco.javacpp.opencv_core.CvSeq;
-import org.bytedeco.javacpp.opencv_core.CvSize;
 import org.bytedeco.javacpp.opencv_core.IplImage;
 import org.bytedeco.javacpp.opencv_highgui;
 import org.bytedeco.javacpp.opencv_highgui.CvCapture;
@@ -59,12 +54,24 @@ import core.Globals;
 
 public class Camera {
 
+
+
+
+
+
+
+
+
+
+
+	// @formatter:off
 	private static Camera	instance;
 
 	public static final int	MODE_STANDARD					= 0;	// MODO NORMAL
 	public static final int	MODE_CORNERS_DETECTION_PREVIEW	= 1;	// MODO DETECTOR DE ESQUINAS RECTANGULOS
 	public static final int	MODE_CORRECT_PERSPECTIVE		= 2;	// MODO CORRECTOR DE PERSPECTIVA
 	public static final int	MODE_NEW_ROBOT_MARKED			= 3;	// MODO DETECTOR DE NUEVO ROBOT
+	// @formatter:on
 
 	private boolean			reading;
 	private boolean			stopped;
@@ -79,32 +86,28 @@ public class Camera {
 	}
 
 	public void run(final CameraObserver cameraObserver) {
+		// @formatter:off
 		if (!this.reading) {
-			ProgressDialog dialog = new ProgressDialog("Iniciando cámara");
-			dialog.setVisible(true);
-			this.camera = cvCreateCameraCapture(opencv_highgui.CV_CAP_ANY); // TODO Comprobar si no tiene
-																			// camara
-			opencv_highgui.cvSetCaptureProperty(this.camera, opencv_highgui.CV_CAP_PROP_FRAME_HEIGHT,
-					Globals.CAMERA_HEIGHT);
-			opencv_highgui.cvSetCaptureProperty(this.camera, opencv_highgui.CV_CAP_PROP_FRAME_WIDTH,
-					Globals.CAMERA_WIDTH);
-			dialog.dispose();
+			this.camera = cvCreateCameraCapture(opencv_highgui.CV_CAP_ANY);
+			opencv_highgui.cvSetCaptureProperty(this.camera, opencv_highgui.CV_CAP_PROP_FRAME_HEIGHT, Globals.CAMERA_HEIGHT);
+			opencv_highgui.cvSetCaptureProperty(this.camera, opencv_highgui.CV_CAP_PROP_FRAME_WIDTH, Globals.CAMERA_WIDTH);
 			this.reading = true;
 			this.stopped = false;
+			
 			new Thread() {
 				public void run() {
+					Point[] squares = null;
+					Point[] circles = null;
+					
 					while (Camera.this.reading) {
 						Camera.this.frame = opencv_highgui.cvQueryFrame(Camera.this.camera);
 						if (Camera.this.frame != null) {
-							if (Globals.Mirror) {
-								cvFlip(Camera.this.frame, Camera.this.frame, 1);
-							}
 							switch (Camera.this.mode) {
 								case MODE_STANDARD:
 
 									break;
 								case MODE_CORNERS_DETECTION_PREVIEW:
-									Point[] squares = findSquare(Camera.this.frame);
+									squares = findSquare(Camera.this.frame);
 									if (squares != null && squares.length == 4) {
 										Camera.this.frame = drawRectangle(Camera.this.frame, squares);
 									}
@@ -113,14 +116,14 @@ public class Camera {
 									Camera.this.frame = perspectiveCorrection(Camera.this.frame, Globals.CircuitCorners);
 									break;
 								case MODE_NEW_ROBOT_MARKED:
-									// Camera.this.frame = perspectiveCorrection(Camera.this.frame,
+									// Camera.this.frame =
+									// perspectiveCorrection(Camera.this.frame,
 									// Globals.CircuitCorners);
 									if (Globals.AuxRobot != null) {
-										Point[] circles = findCircles();
+										circles = findCircles();
 										for (Point circle : circles) {
 											Color color = getPointColors(circle.x, circle.y, 0, 0).firstElement();
-											if (Utilities.ColorBetweenMaxMin(color, Globals.AuxRobot.getColorMin(),
-													Globals.AuxRobot.getColorMax(), 10)) {
+											if (Utilities.ColorBetweenMaxMin(color, Globals.AuxRobot.getColorMin(), Globals.AuxRobot.getColorMax(), 10)) {
 												CvPoint center = new CvPoint();
 												center.x(circle.x);
 												center.y(circle.y);
@@ -130,14 +133,15 @@ public class Camera {
 									}
 									break;
 							}
-							cameraObserver.changeImage(cvCloneImage(Camera.this.frame));
-						}
+							cameraObserver.changeImage(Camera.this.frame.clone());
+							Camera.this.frame.release();
+						}					
 					}
-					Camera.this.frame.release();
 					Camera.this.stopped = true;
 				}
 			}.start();
 		}
+		// @formatter:on
 	}
 
 	public static void setMode(int mode) {
@@ -145,33 +149,26 @@ public class Camera {
 	}
 
 	public Point[] findSquare(IplImage img) {
+		// @formatter:off
 		try {
-			CvMemStorage storage = cvCreateMemStorage(0);
+			CvMemStorage storage = CvMemStorage.create();
 			Point[] squares = null;
-			CvSize cvSize = cvSize(img.width(), img.height());
-			IplImage gray = cvCreateImage(cvSize, img.depth(), 1);
+			IplImage gray = cvCreateImage(cvSize(img.width(), img.height()), img.depth(), 1);
 			cvCvtColor(img, gray, CV_BGR2GRAY);
-
 			cvCanny(gray, gray, 0, 50, 5);
-
 			CvSeq contours = new CvSeq();
-			cvFindContours(gray, storage, contours, Loader.sizeof(CvContour.class), CV_RETR_LIST,
-					CV_CHAIN_APPROX_SIMPLE, cvPoint(0, 0));
-
+			cvFindContours(gray, storage, contours, Loader.sizeof(CvContour.class), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0, 0));
+			gray.release();
+			double s = 0.0, t = 0.0;
+			CvSeq result = null;
 			boolean enc = false;
 			while (contours != null && !contours.isNull() && !enc) {
-				CvSeq result = cvApproxPoly(contours, Loader.sizeof(CvContour.class), storage, CV_POLY_APPROX_DP,
-						cvContourPerimeter(contours) * 0.02, 0);
-
-				if (result.total() == 4 && Math.abs(cvContourArea(result, CV_WHOLE_SEQ, 0)) > 10000
-						&& cvCheckContourConvexity(result) != 0) {
-
-					double s = 0.0, t = 0.0;
+				result = cvApproxPoly(contours, Loader.sizeof(CvContour.class), storage, CV_POLY_APPROX_DP, cvContourPerimeter(contours) * 0.02, 0);
+				if (result.total() == 4 && Math.abs(cvContourArea(result, CV_WHOLE_SEQ, 0)) > 10000 && cvCheckContourConvexity(result) != 0) {
 
 					for (int i = 0; i < 5; i++) {
 						if (i >= 2) {
-							t = Math.abs(angle(new CvPoint(cvGetSeqElem(result, i)),
-									new CvPoint(cvGetSeqElem(result, i - 2)), new CvPoint(cvGetSeqElem(result, i - 1))));
+							t = Math.abs(angle(new CvPoint(cvGetSeqElem(result, i)), new CvPoint(cvGetSeqElem(result, i - 2)), new CvPoint(cvGetSeqElem(result, i - 1))));
 							s = s > t ? s : t;
 						}
 					}
@@ -179,19 +176,24 @@ public class Camera {
 					if (s < 0.3) {
 						squares = new Point[4];
 						for (int i = 0; i < 4; i++) {
-							squares[i] = new Point(new CvPoint(cvGetSeqElem(result, i)).x(), new CvPoint(cvGetSeqElem(
-									result, i)).y());
+							squares[i] = new Point(new CvPoint(cvGetSeqElem(result, i)).x(), new CvPoint(cvGetSeqElem(result, i)).y());
 						}
 						enc = true;
 					}
 				}
+				result.deallocate();
 				contours = contours.h_next();
 			}
+			if (contours != null) {
+				contours.deallocate();
+			}
+			storage.release();
 			return squares;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
+		// @formatter:on
 	}
 
 	public Point[] findCircles() {
@@ -203,7 +205,8 @@ public class Camera {
 				mem, // Memory Storage
 				CV_HOUGH_GRADIENT, // Detection method
 				1, // Inverse ratio
-				10, // Minimum distance between the centers of the detected circles
+				10, // Minimum distance between the centers of the detected
+					// circles
 				80, // Higher threshold for canny edge detector
 				80, // Threshold at the center detection stage
 				10, // min radius
@@ -221,31 +224,29 @@ public class Camera {
 	}
 
 	public IplImage drawRectangle(IplImage img, Point[] squares) {
-		IplImage cpy = cvCloneImage(img);
+		CvPoint origin = new CvPoint();
+		CvPoint end = new CvPoint();
 		for (int i = 0; i < squares.length; i++) {
 			if (i < squares.length - 1) {
-				CvPoint origin = new CvPoint();
 				origin.x(squares[i].x);
 				origin.y(squares[i].y);
-				CvPoint end = new CvPoint();
 				end.x(squares[i + 1].x);
 				end.y(squares[i + 1].y);
-				cvDrawLine(cpy, origin, end, CvScalar.GREEN, 3, CV_AA, 0);
 			} else {
-				CvPoint origin = new CvPoint();
 				origin.x(squares[i].x);
 				origin.y(squares[i].y);
-				CvPoint end = new CvPoint();
 				end.x(squares[0].x);
 				end.y(squares[0].y);
-				cvDrawLine(cpy, origin, end, CvScalar.GREEN, 3, CV_AA, 0);
 			}
+			cvDrawLine(img, origin, end, CvScalar.GREEN, 3, CV_AA, 0);
 		}
-		return cpy;
+		origin.deallocate();
+		end.deallocate();
+		return img;
 	}
 
 	public IplImage drawCircle(IplImage img, int x, int y, int radius) {
-		IplImage cpy = cvCloneImage(img);
+		IplImage cpy = img.clone();
 		CvPoint p = new CvPoint();
 		p.x(x);
 		p.y(y);
@@ -255,7 +256,7 @@ public class Camera {
 
 	public IplImage perspectiveCorrection(IplImage img, Point[] squares) {
 		if (squares.length == 4) {
-			IplImage cpy = cvCloneImage(img);
+			IplImage cpy = img.clone();
 			CvMat p = cvCreateMat(4, 2, CV_64FC1);
 			CvMat h = cvCreateMat(4, 2, CV_64FC1);
 			CvMat p2h = cvCreateMat(3, 3, CV_64FC1);
@@ -290,13 +291,16 @@ public class Camera {
 		return img;
 	}
 
-	public Vector<Color> getPointColors(int x, int y, int marginWidth, int marginHeight) {
+	public Vector<Color> getPointColors(int x, int y, int marginWidth,
+			int marginHeight) {
 		Vector<Color> colors = new Vector<Color>();
 		for (int j = x - marginHeight; j < x + marginHeight; j++) {
 			for (int i = x - marginWidth; i < x + marginWidth; i++) {
-				if (i >= 0 && j >= 0 && i < Globals.CAMERA_WIDTH - 1 && j < Globals.CAMERA_HEIGHT - 1) {
+				if (i >= 0 && j >= 0 && i < Globals.CAMERA_WIDTH - 1
+						&& j < Globals.CAMERA_HEIGHT - 1) {
 					CvScalar s = cvGet2D(Camera.this.frame, i, j);
-					colors.add(new Color((int) s.val(2), (int) s.val(1), (int) s.val(0)));
+					colors.add(new Color((int) s.val(2), (int) s.val(1),
+							(int) s.val(0)));
 				}
 			}
 		}
@@ -304,11 +308,13 @@ public class Camera {
 	}
 
 	public static double angle(CvPoint pt1, CvPoint pt2, CvPoint pt0) {
+		// @formatter:off
 		double dx1 = pt1.x() - pt0.x();
 		double dy1 = pt1.y() - pt0.y();
 		double dx2 = pt2.x() - pt0.x();
 		double dy2 = pt2.y() - pt0.y();
 		return (dx1 * dx2 + dy1 * dy2) / Math.sqrt((dx1 * dx1 + dy1 * dy1) * (dx2 * dx2 + dy2 * dy2) + 1e-10);
+		// @formatter:on
 	}
 
 	public void stop() {

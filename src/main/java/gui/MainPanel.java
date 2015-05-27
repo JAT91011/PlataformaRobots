@@ -51,7 +51,8 @@ public class MainPanel extends JPanel implements CameraObserver, ActionListener 
 		setLayout(gridBagLayout);
 
 		JPanel panelMenu = new JPanel();
-		panelMenu.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+		panelMenu.setBorder(BorderFactory
+				.createEtchedBorder(EtchedBorder.RAISED));
 		GridBagConstraints gbc_panelRobots = new GridBagConstraints();
 		gbc_panelRobots.insets = new Insets(10, 10, 10, 10);
 		gbc_panelRobots.fill = GridBagConstraints.BOTH;
@@ -60,9 +61,11 @@ public class MainPanel extends JPanel implements CameraObserver, ActionListener 
 		add(panelMenu, gbc_panelRobots);
 		GridBagLayout gbl_panelRobots = new GridBagLayout();
 		gbl_panelRobots.columnWidths = new int[] { 0, 0, 0, 0, 0 };
-		gbl_panelRobots.rowHeights = new int[] { 0, 0, 0, 0, 0 };
-		gbl_panelRobots.columnWeights = new double[] { 1.0, 1.0, 1.0, 1.0, Double.MIN_VALUE };
-		gbl_panelRobots.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
+		gbl_panelRobots.rowHeights = new int[] { 0, 0, 0, 0, 0, 0 };
+		gbl_panelRobots.columnWeights = new double[] { 1.0, 1.0, 1.0, 1.0,
+				Double.MIN_VALUE };
+		gbl_panelRobots.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, 0.0,
+				Double.MIN_VALUE };
 		panelMenu.setLayout(gbl_panelRobots);
 
 		JLabel lblRobots = new JLabel("Robots");
@@ -80,20 +83,25 @@ public class MainPanel extends JPanel implements CameraObserver, ActionListener 
 		gbc_lblRobots.gridy = 0;
 		panelMenu.add(lblRobots, gbc_lblRobots);
 
-		btnAddRobot = new JButton(new ImageIcon(MainPanel.class.getResource("/icons/add-icon.png")));
-		btnAddRobot.setToolTipText("Pulsa para añadir un nuevo robot a la  plataforma");
+		btnAddRobot = new JButton(new ImageIcon(
+				MainPanel.class.getResource("/icons/add-icon.png")));
+		btnAddRobot
+				.setToolTipText("Pulsa para añadir un nuevo robot a la  plataforma");
 		btnAddRobot.setFocusPainted(false);
 		btnAddRobot.setContentAreaFilled(false);
 		btnAddRobot.setPreferredSize(new Dimension(50, 50));
 		btnAddRobot.addActionListener(this);
+		btnAddRobot.setActionCommand("AddRobot");
 		GridBagConstraints gbc_btnAddRobot = new GridBagConstraints();
 		gbc_btnAddRobot.insets = new Insets(0, 5, 5, 5);
 		gbc_btnAddRobot.gridx = 0;
 		gbc_btnAddRobot.gridy = 1;
 		panelMenu.add(btnAddRobot, gbc_btnAddRobot);
 
-		btnRemoveRobot = new JButton(new ImageIcon(MainPanel.class.getResource("/icons/delete-icon.png")));
-		btnRemoveRobot.setToolTipText("Pulsa para eliminar robots de la plataforma");
+		btnRemoveRobot = new JButton(new ImageIcon(
+				MainPanel.class.getResource("/icons/delete-icon.png")));
+		btnRemoveRobot
+				.setToolTipText("Pulsa para eliminar robots de la plataforma");
 		btnRemoveRobot.setFocusPainted(false);
 		btnRemoveRobot.setContentAreaFilled(false);
 		btnRemoveRobot.setPreferredSize(new Dimension(50, 50));
@@ -104,8 +112,10 @@ public class MainPanel extends JPanel implements CameraObserver, ActionListener 
 		gbc_btnRemoveRobot.gridy = 1;
 		panelMenu.add(btnRemoveRobot, gbc_btnRemoveRobot);
 
-		btnRouteEditor = new JButton(new ImageIcon(MainPanel.class.getResource("/icons/route-icon.png")));
-		btnRouteEditor.setToolTipText("Pulsa para configurar las rutas de la plataforma");
+		btnRouteEditor = new JButton(new ImageIcon(
+				MainPanel.class.getResource("/icons/route-icon.png")));
+		btnRouteEditor
+				.setToolTipText("Pulsa para configurar las rutas de la plataforma");
 		btnRouteEditor.setFocusPainted(false);
 		btnRouteEditor.setContentAreaFilled(false);
 		btnRouteEditor.setPreferredSize(new Dimension(50, 50));
@@ -116,7 +126,8 @@ public class MainPanel extends JPanel implements CameraObserver, ActionListener 
 		gbc_btnRouteEditor.gridy = 1;
 		panelMenu.add(btnRouteEditor, gbc_btnRouteEditor);
 
-		btnPlayPause = new JButton(new ImageIcon(MainPanel.class.getResource("/icons/play-icon.png")));
+		btnPlayPause = new JButton(new ImageIcon(
+				MainPanel.class.getResource("/icons/play-icon.png")));
 		btnPlayPause.setToolTipText("Pulsa para iniciar la plataforma");
 		btnPlayPause.setFocusPainted(false);
 		btnPlayPause.setContentAreaFilled(false);
@@ -130,7 +141,7 @@ public class MainPanel extends JPanel implements CameraObserver, ActionListener 
 		JScrollPane scrollPane = new JScrollPane();
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.gridwidth = 4;
-		gbc_scrollPane.insets = new Insets(0, 5, 5, 5);
+		gbc_scrollPane.insets = new Insets(0, 5, 5, 0);
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane.gridx = 0;
 		gbc_scrollPane.gridy = 2;
@@ -144,7 +155,7 @@ public class MainPanel extends JPanel implements CameraObserver, ActionListener 
 		GridBagConstraints gbc_lblTotalConnected = new GridBagConstraints();
 		gbc_lblTotalConnected.fill = GridBagConstraints.HORIZONTAL;
 		gbc_lblTotalConnected.gridwidth = 4;
-		gbc_lblTotalConnected.insets = new Insets(0, 5, 5, 5);
+		gbc_lblTotalConnected.insets = new Insets(0, 5, 5, 0);
 		gbc_lblTotalConnected.gridx = 0;
 		gbc_lblTotalConnected.gridy = 3;
 		panelMenu.add(lblTotalConnected, gbc_lblTotalConnected);
@@ -185,39 +196,22 @@ public class MainPanel extends JPanel implements CameraObserver, ActionListener 
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (btnAddRobot == e.getSource()) {
-
-			// STOP PLATFORM
-			int selection = JOptionPane.showOptionDialog(this,
-					"A continuación la plataforma se detendrá para añadir los nuevos robots.\n¿Deseas continuar?",
-					"Aviso", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-					new ImageIcon(WizardDialog.class.getResource("/icons/warning-icon.png")),
-					new Object[] { "Si", "No" }, "Si");
-			if (selection == 0) {
-				// STOP PLATFORM
-				Camera.getInstance().stop();
-				int seleccion = JOptionPane.showOptionDialog(Window.getInstance(),
-						"Introduce los nuevos robots y pulsa continuar.", "Añadir robots", JOptionPane.YES_NO_OPTION,
-						JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Continuar", "Cancelar" }, "Continuar");
-				if (seleccion == 0) {
-					Point[] circles = Camera.getInstance().findCircles();
+		// @formatter:off
+		switch (e.getActionCommand()) {
+			case "AddRobot":
+				int selection = JOptionPane.showOptionDialog(Window.getInstance(), "A continuación la plataforma se detendrá para añadir los nuevos robots.\n¿Deseas continuar?", "Aviso",
+						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(WizardDialog.class.getResource("/icons/warning-icon.png")), new Object[] { "Si", "No" }, "Si");
+				if (selection == 0) {
+					// STOP PLATFORM
+					Camera.getInstance().stop();
+					int seleccion = JOptionPane.showOptionDialog(Window.getInstance(), "Introduce los nuevos robots y pulsa continuar.", "Añadir robots", 
+						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Continuar", "Cancelar" }, "Continuar");
+					if (seleccion == 0) {
+						Point[] circles = Camera.getInstance().findCircles();
+					}
+					Camera.getInstance().run(this);
 				}
-
-				WizardDialog p = new WizardDialog("Asistente incorporación nuevo robot", Window.getInstance(),
-						Globals.RobotAdditionWizard);
-				p.pack();
-				p.setVisible(true);
-				Camera.getInstance().run(this);
-			}
-
-		} else if (btnRemoveRobot == e.getSource()) {
-
-		} else if (btnRouteEditor == e.getSource()) {
-			Camera.getInstance().stop();
-			WizardDialog p = new WizardDialog("Asistente de rutas", Window.getInstance(), Globals.RouteConfigWizard);
-			p.pack();
-			p.setVisible(true);
-			Camera.getInstance().run(this);
+				break;
 		}
 	}
 

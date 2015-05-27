@@ -31,7 +31,8 @@ public class CircuitScannerPanel extends WizardPanel implements CameraObserver {
 
 	public CircuitScannerPanel() {
 
-		super("Localizar circuito",
+		super(
+				"Localizar circuito",
 				"El escenario y la cámara no podrán moverse de aquí en adelante.\n¿Deseas continuar?");
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -41,7 +42,8 @@ public class CircuitScannerPanel extends WizardPanel implements CameraObserver {
 		gridBagLayout.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
 		setLayout(gridBagLayout);
 
-		JLabel lblTitle = new JLabel("Pulsa siguiente cuando el circuito esté remarcado");
+		JLabel lblTitle = new JLabel(
+				"Pulsa siguiente cuando el circuito esté remarcado");
 		lblTitle.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		GridBagConstraints gbc_lblInputRealMeasures = new GridBagConstraints();
 		gbc_lblInputRealMeasures.anchor = GridBagConstraints.WEST;
@@ -51,11 +53,15 @@ public class CircuitScannerPanel extends WizardPanel implements CameraObserver {
 		add(lblTitle, gbc_lblInputRealMeasures);
 
 		lblCamera = new JLabel();
-		lblCamera.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+		lblCamera.setBorder(BorderFactory
+				.createEtchedBorder(EtchedBorder.RAISED));
 		lblCamera.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCamera.setPreferredSize(new Dimension(Globals.CAMERA_WIDTH, Globals.CAMERA_HEIGHT));
-		lblCamera.setMinimumSize(new Dimension(Globals.CAMERA_WIDTH, Globals.CAMERA_HEIGHT));
-		lblCamera.setMaximumSize(new Dimension(Globals.CAMERA_WIDTH, Globals.CAMERA_HEIGHT));
+		lblCamera.setPreferredSize(new Dimension(Globals.CAMERA_WIDTH,
+				Globals.CAMERA_HEIGHT));
+		lblCamera.setMinimumSize(new Dimension(Globals.CAMERA_WIDTH,
+				Globals.CAMERA_HEIGHT));
+		lblCamera.setMaximumSize(new Dimension(Globals.CAMERA_WIDTH,
+				Globals.CAMERA_HEIGHT));
 		GridBagConstraints gbc_lblCamera = new GridBagConstraints();
 		gbc_lblCamera.insets = new Insets(5, 15, 15, 15);
 		gbc_lblCamera.gridx = 0;
@@ -73,7 +79,8 @@ public class CircuitScannerPanel extends WizardPanel implements CameraObserver {
 		if (CircuitCorners == null) {
 			errorMessage += "\n - No se ha encontrado el borde del circuito.";
 		} else {
-			Globals.CircuitImage = new ImageIcon(Camera.getInstance().perspectiveCorrection(this.image, CircuitCorners)
+			Globals.CircuitImage = new ImageIcon(Camera.getInstance()
+					.perspectiveCorrection(this.image, CircuitCorners)
 					.getBufferedImage());
 		}
 		return errorMessage;

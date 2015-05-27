@@ -1,8 +1,8 @@
 package gui.wizard;
 
-import gui.components.RoundedPanel;
+import javax.swing.JPanel;
 
-public abstract class WizardPanel extends RoundedPanel {
+public abstract class WizardPanel extends JPanel {
 
 	private static final long	serialVersionUID	= -74215861723722444L;
 

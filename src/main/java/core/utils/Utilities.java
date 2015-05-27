@@ -82,27 +82,31 @@ public class Utilities {
 			}
 			colors[0] = new Color(rgbMin[0], rgbMin[1], rgbMin[2]);
 			colors[1] = new Color(rgbMax[0], rgbMax[1], rgbMax[2]);
-			colors[2] = new Color((rgbMax[0] + rgbMin[0]) / 2, (rgbMax[1] + rgbMin[1]) / 2, (rgbMax[2] + rgbMin[2]) / 2);
+			colors[2] = new Color((rgbMax[0] + rgbMin[0]) / 2,
+					(rgbMax[1] + rgbMin[1]) / 2, (rgbMax[2] + rgbMin[2]) / 2);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return colors;
 	}
 
-	public static boolean ColorBetweenMaxMin(Color pColor, Color pColorMin, Color pColorMax, int pMargin) {
+	public static boolean ColorBetweenMaxMin(Color pColor, Color pColorMin,
+			Color pColorMax, int pMargin) {
 		try {
-			return (pColor.getRed() > pColorMin.getRed() - pMargin && pColor.getRed() < pColorMax.getRed() + pMargin)
-					&& (pColor.getGreen() > pColorMin.getGreen() - pMargin && pColor.getGreen() < pColorMax.getGreen()
-							+ pMargin)
-					&& (pColor.getBlue() > pColorMin.getBlue() - pMargin && pColor.getBlue() < pColorMax.getBlue()
-							+ pMargin);
+			return (pColor.getRed() > pColorMin.getRed() - pMargin && pColor
+					.getRed() < pColorMax.getRed() + pMargin)
+					&& (pColor.getGreen() > pColorMin.getGreen() - pMargin && pColor
+							.getGreen() < pColorMax.getGreen() + pMargin)
+					&& (pColor.getBlue() > pColorMin.getBlue() - pMargin && pColor
+							.getBlue() < pColorMax.getBlue() + pMargin);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
 	}
 
-	public static String FillString(String text, char fillCharacter, int length, int typeData) {
+	public static String FillString(String text, char fillCharacter,
+			int length, int typeData) {
 		try {
 			String result = "";
 			if (text.length() > length) {
@@ -135,5 +139,9 @@ public class Utilities {
 			e.printStackTrace();
 			return "";
 		}
+	}
+
+	public static String firstToUpper(final String s) {
+		return s.substring(0, 1).toUpperCase() + s.substring(1);
 	}
 }
